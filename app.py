@@ -117,7 +117,6 @@ def receive_username(username):
 @ socketio.on('dm', namespace='/private')
 @ login_required
 def handle_dm(payload):
-    print(users)
     print(payload)
     try:
         recipient_sess_id = users[payload['username'].lower()]
