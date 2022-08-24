@@ -4,7 +4,7 @@ from flask_login import UserMixin, LoginManager
 from datetime import datetime
 
 
-'''DATABASES'''
+'''APP CONFIGURATION'''
 
 
 app = Flask(__name__)
@@ -25,6 +25,8 @@ login_manager.init_app(app)
 def load_user(id):
     return User.query.get(int(id))
 
+
+'''DATABASES'''
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
