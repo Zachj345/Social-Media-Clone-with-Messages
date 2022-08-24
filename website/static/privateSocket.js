@@ -77,7 +77,6 @@ $(document).ready(() => {
         newIndex = nameTitles.indexOf($("#privateUsername").val().trim());
       }
 
-      console.log(nameTitles);
 
       console.log(newIndex);
 
