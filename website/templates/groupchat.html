@@ -1,0 +1,182 @@
+<html>
+  <title>{% block title %} Group Chat {%endblock%}</title>
+  {% extends 'base.html' %} {% block content %}
+  <head>
+    <style>
+         * {
+        margin: 0;
+        padding: 0;
+      }
+      .title {
+        text-align: center;
+        font-family: -apple-system;
+      }
+      .messages {
+        display: flex;
+        flex-direction: row;
+      }
+      .message-list {
+        width: 40%;
+        min-height: 80vh;
+        border: 3px grey solid;
+      }
+      .message-box {
+        width: 60%;
+        min-height: 80vh;
+        border: 3px grey solid;
+      }
+      #message-search {
+        margin: 2% 0 2% 2%;
+      }
+      #message-btn {
+        margin: 2%;
+        height: 9%;
+        width: 25%;
+      }
+      .message-btn {
+        margin: 5% auto;
+        padding: 3.5% 11%;
+        border-radius: 50%;
+        font-size: 1.5rem;
+      }
+      .no-mess {
+        text-align: center;
+        font-size: 1.5rem;
+        margin: auto;
+      }
+      .send-form {
+        display: flex;
+        margin: auto 2.5%;
+      }
+      .send-btn {
+        width: 30%;
+      }
+      #message-txt {
+        width: 185%;
+      }
+      .message-card {
+        width: 55%;
+        float: right;
+        margin: 3% 2%;
+        background-color: lightblue;
+      }
+      .receiving-card {
+        width: 55%;
+        margin: 3% 2%;
+        background-color: lightcoral;
+      }
+      #del-message {
+        float: right;
+        margin: 0 0 2% 88%;
+      }
+      @media (min-width: 0px) and (max-width: 777px) {
+        .messages {
+          flex-direction: column;
+        }
+        .message-list {
+          width: 100%;
+          min-height: 10%;
+          margin-top: -4%;
+          max-height: 24rem;
+          overflow: scroll;
+        }
+        .message-box {
+          border: none;
+          width: 100%;
+        }
+        .delete-mess {
+          float: right;
+          margin: -8% 0 3% 86%;
+        }
+        .send-form {
+          margin: auto;
+          width: 90%;
+          display: flex;
+          flex-direction: column;
+        }
+        .send-btn {
+          width: 50%;
+          margin: 3% auto;
+        }
+        .message-card {
+          height: 55%;
+        }
+      
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <p id="sender" class="hide">{{user.username | title}}</p>
+    <h1 class="title">Group Chat</h1>
+    <br />
+    <div class="messages" id="message-app">
+      <div class="message-list" id="messages">
+        
+        <br />
+        <div id="reload">
+            {% for message in messages%} {%if message.user_id == user.id %}
+            <div class="card message-card">
+              <div class="card-header">
+                {{message.sender | title}}
+              </div>
+              <div class="card-body me-card">
+                <p>{{message.text}}</p>
+                <p>{{message.time}}</p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close"
+                onclick="deleteMessage({{message.id}})"
+                id="del-message"
+                class="btn-close delete-mess"
+              ></button>
+            </div>
+            {%else%}
+  
+            <div class="card receiving-card">
+              <div class="card-header">
+                {{message.sender | title}}
+              </div>
+              <div class="card-body">
+                <p>{{message.text}}</p>
+                <p>{{message.time}}</p>
+              </div>
+            </div>
+            {%endif%} {%endfor%}
+          </div>
+          <br>
+          
+      </div>
+      <div class="message-box">
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <h1 class="title">
+            Add a Message to the Group-Chat!
+        </h1>
+          <br />
+        </div>
+        <div class="message-convo hide"></div>
+        <div class="d-flex send-form" id="chat-form">
+          
+          <input
+          spellcheck="false"
+            class="form-control me-2"
+            type="text"
+            id="message"
+            name="message-text"
+            placeholder="Message"
+            aria-label="Message"
+          />
+          <button class="btn btn-success send-btn" id="sendBtn" type="submit">
+            Send
+          </button>
+        </div>
+        <br />
+       
+
+        
+        
+      </div>
+    </div>
+  {%endblock%}
+</html>

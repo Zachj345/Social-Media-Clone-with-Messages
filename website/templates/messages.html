@@ -1,0 +1,261 @@
+<html>
+  <title>{% block title %} Direct Messages {%endblock%}</title>
+  {% extends 'base.html' %} {% block content %}
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .title {
+        text-align: center;
+        font-family: -apple-system;
+      }
+      .messages {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .message-list {
+        width: 40%;
+        min-height: 70vh;
+        border: 3px grey solid;
+        overflow: scroll;
+      }
+      .message-box {
+        width: 60%;
+        min-height: 70vh;
+        border: 3px grey solid;
+      }
+      #message-search {
+        margin: 2% 0 2% 2%;
+      }
+      #message-btn {
+        margin: 2%;
+        height: 9%;
+        width: 25%;
+      }
+      .message-btn {
+        margin: 5% auto;
+        padding: 3.5% 11%;
+        border-radius: 50%;
+        font-size: 1.5rem;
+      }
+      .no-mess {
+        text-align: center;
+        font-size: 1.5rem;
+        margin: auto;
+      }
+      .send-form {
+        display: flex;
+        margin: auto 2.5%;
+      }
+      .send-btn {
+        width: 30%;
+      }
+      #message-txt {
+        width: 185%;
+      }
+      .message-card {
+        width: 55%;
+        float: right;
+        margin: 3% 2%;
+        background-color: lightblue;
+      }
+      .receiving-card {
+        width: 55%;
+        margin: 3% 2%;
+        background-color: lightcoral;
+      }
+      .del-dm {
+        float: right;
+        margin: 0 0 2% 90%;
+      }
+      @media (min-width: 0px) and (max-width: 777px) {
+        .messages {
+          flex-direction: column;
+        }
+        .message-list {
+          width: 100%;
+          min-height: 10%;
+          margin-top: -4%;
+          max-height: 15rem;
+          overflow: scroll;
+        }
+        .message-box {
+          border: none;
+          width: 100%;
+        }
+        .message-btn {
+          margin: 5% auto 3% auto;
+          padding: 3% 10%;
+          border-radius: 50%;
+          font-size: 1.4rem;
+        }
+        .del-dm {
+          float: right;
+          margin: -5% 0 3% 86%;
+        }
+        .convo-tab {
+          margin: auto;
+          width: 60%;
+          height: 4.8rem;
+        }
+        .convo-card-body {
+          height: 20%;
+        }
+        .send-form {
+          margin: auto;
+          width: 90%;
+          display: flex;
+          flex-direction: column;
+        }
+        .send-btn {
+          width: 50%;
+          margin: 3% auto;
+        }
+        .message-card {
+          height: 60%;
+        }
+        .convo-txt {
+          margin: 0;
+        }
+        .convo-title {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <input
+      type="text"
+      hidden
+      name="usersUsername"
+      id="senderName"
+      value="{{user.username}}"
+    />
+
+    <h1 class="title">Messages</h1>
+    <br />
+    <div class="messages" id="message-app">
+      <div class="message-list" id="convos">
+        <br />
+
+        <div id="reload-convos-parent">
+          <div id="reload-convos">
+            {% for name in convo_keys %}
+            <div
+              class="card text-white bg-dark mb-3 convo-tab"
+              style="max-width: 18rem"
+              onclick="showDM({{loop.index0}})"
+              id="show-dm-{{loop.index0}}"
+            >
+              <div class="card-body convo-card-body">
+                <h5 class="card-title convo-title" id="title-{{loop.index0}}">
+                  Convo with {{name.username | title}}
+                </h5>
+                <p class="card-text convo-txt">Click to open convo!</p>
+              </div>
+            </div>
+            {%endfor%}
+          </div>
+        </div>
+      </div>
+
+      <div class="message-box">
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button class="btn btn-secondary message-btn" disabled type="button">
+            New Message
+          </button>
+          <br />
+        </div>
+
+        <div class="d-flex send-form" id="chat-form">
+          <input
+            spellcheck="false"
+            class="form-control me-2"
+            type="search"
+            id="privateUsername"
+            name="dm-search"
+            placeholder="Search for existing users"
+            aria-label="Search"
+            list="user_list"
+            autocomplete="off"
+          />
+          <datalist id="user_list">
+            {% for i in user_list %} {% if i.username != user.username %}
+            <option value="{{i.username | title}}"></option>
+            {% endif %} {% endfor %}
+          </datalist>
+          <input
+            spellcheck="false"
+            class="form-control me-2"
+            type="text"
+            id="privateMessage"
+            name="message-text"
+            placeholder="Message"
+            aria-label="Message"
+          />
+          <button
+            class="btn btn-success send-btn"
+            id="privateSendBtn"
+            type="submit"
+          >
+            Send
+          </button>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div id="refresh">
+          <div id="convo-view">
+            {% for current_convo in convo_vals %} {% set outer_index =
+            loop.index0 %}
+            <input type="number" hidden class="index" value="{{outer_index}}" />
+            <div id="parentReload-{{outer_index}}">
+              <div id="reload-{{outer_index}}" class="load-convo">
+                {% for message in current_convo %} {%if message.user_id ==
+                user.id %}
+                <div class="card message-card">
+                  <div class="card-header">{{message.sender | title}}</div>
+                  <div class="card-body me-card">
+                    <p>{{message.text}}</p>
+                    <p>{{message.time}}</p>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="Close"
+                    onclick="deleteDM({{message.id}}, {{outer_index}})"
+                    id="del-dm-{{outer_index}}"
+                    class="btn-close delete-mess del-dm"
+                  ></button>
+                </div>
+
+                {%else%}
+
+                <div class="card receiving-card">
+                  <div class="card-header">{{message.sender | title}}</div>
+                  <div class="card-body">
+                    <p>{{message.text}}</p>
+                    <p>{{message.time}}</p>
+                  </div>
+                </div>
+                {%endif%} {%endfor%}
+              </div>
+            </div>
+
+            {%endfor%}
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let conversations = document.querySelectorAll(".load-convo");
+      for (i = 0; i < conversations.length; i++) {
+        conversations[i].classList.add("hide");
+      }
+    </script>
+  </body>
+  {%endblock%}
+</html>
