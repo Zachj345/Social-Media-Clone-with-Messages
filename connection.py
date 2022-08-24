@@ -12,8 +12,6 @@ cur = db.cursor()
 
 # cur.execute('CREATE DATABASE social')
 
-# cur.execute('DROP TABLE like')
-
 cur.execute('SHOW TABLES')
 for i in cur:
     print(i)
