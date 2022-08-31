@@ -83,6 +83,9 @@ def group_chat():
                            messages=messages)
 
 
+'''SOCKETIO EVENT HANDLERS'''
+
+
 @ socketio.on('message')
 @ login_required
 def handle_message(message):
