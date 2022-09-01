@@ -87,7 +87,6 @@ def group_chat():
 
 
 @ socketio.on('message')
-@ login_required
 def handle_message(message):
     print(f'Received message: {message}')
     if message != 'User connected!':
@@ -105,7 +104,6 @@ users = {}
 
 
 @ socketio.on('username', namespace='/private')
-@ login_required
 def receive_username(username):
     for user in User.query.all():
         users[user.username] = request.sid
@@ -118,7 +116,6 @@ def receive_username(username):
 
 
 @ socketio.on('dm', namespace='/private')
-@ login_required
 def handle_dm(payload):
     print(payload)
     try:
