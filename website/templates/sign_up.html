@@ -1,0 +1,137 @@
+<html>
+  <title>{% block title %} Sign Up / Login {%endblock%}</title>
+  {% extends 'base.html' %} {% block content %}
+  <head>
+    <style>
+      .background {
+        height: 80vh;
+        width: 100vw;
+        background-image: url("/static/images/connections.jpg");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+      .headr {
+        font-size: 1.88rem;
+        margin: 5% 10% 0 5%;
+        color: whitesmoke;
+      }
+      .bottom {
+        width: 88%;
+        margin: auto;
+      }
+      .foot {
+        color: gray;
+        margin-left: 6%;
+      }
+      .titles {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .headr-two {
+        font-size: 1.6rem;
+        color: whitesmoke;
+        margin: 5% 5% 0 0%;
+      }
+      @media (min-width: 0px) and (max-width: 740px) {
+        .headr-two {
+          font-size: 1.2rem;
+          margin: 4% 4% 0 0%;
+          text-align: center;
+        }
+        .headr {
+          font-size: 1.4rem;
+          margin: 4% 8% 0 4%;
+          text-align: center;
+        }
+      }
+      .forms {
+        margin: 5% 1% 8% 55%;
+        width: 40%;
+      }
+      .form-label {
+        color: white;
+      }
+      #submit-btn {
+        margin-top: 5%;
+        margin-left: 80%;
+        width: 70%;
+      }
+      @media (min-width: 412px) and (max-width: 740px) {
+        .forms {
+          margin: 5% auto;
+          width: 66%;
+        }
+      }
+      @media (min-width: 0px) and (max-width: 412px) {
+        .forms {
+          margin: 5% auto;
+          width: 88%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background">
+      <div class="titles">
+        <h2 class="headr">
+          Social helps to connect with important people in your life
+        </h2>
+        <h2 class="headr-two"><b>Sign up to Social, It's free!</b></h2>
+      </div>
+      <div class="mb-3 forms">
+        <form action="/sign-up-login" autocomplete="off" method="POST">
+          <label for="exampleFormControlInput1" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            placeholder="Email"
+          />
+          <br />
+          <label for="exampleFormControlInput1" class="form-label"
+            >Username</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            placeholder="@name"
+          />
+          <br />
+          <label for="exampleFormControlInput1" class="form-label"
+            >Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            name="password1"
+            id="password1"
+            placeholder="Enter password"
+          />
+          <br />
+          <label for="exampleFormControlInput1" class="form-label"
+            >Please Repeat Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            name="password2"
+            id="password2"
+            placeholder="Repeat password"
+          />
+          <div class="d-grid gap-2 col-6 mx-auto" id="submit-field">
+            <button class="btn btn-success" id="submit-btn" type="submit">
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="bottom">
+      <hr />
+    </div>
+    <p class="foot">&copy;Social</p>
+  </body>
+  {%endblock%}
+</html>

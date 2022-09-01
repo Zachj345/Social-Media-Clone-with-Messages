@@ -1,0 +1,253 @@
+<html>
+  <title>
+    {% block title %} {{profile_user.username| title}}'s Profile {%endblock%}
+  </title>
+  {% extends 'base.html' %} {% block content %}
+  <head>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .title {
+        text-align: center;
+        font-family: -apple-system;
+        padding-top: 4%;
+        margin: auto 11%;
+      }
+      .txt {
+        color: white;
+      }
+      .post-card {
+        width: 60%;
+        margin: auto;
+      }
+
+      .name {
+        float: left;
+        margin-bottom: 0;
+      }
+      .date {
+        float: right;
+        margin-bottom: 0;
+      }
+      .post-btn {
+        font-size: 2.1rem;
+        margin: 0;
+        padding: 0;
+        color: rgba(255, 255, 255, 0.986);
+      }
+      #post-btn {
+        border-radius: 5%;
+      }
+      .post-txt {
+        font-size: 1.4em;
+        text-align: left;
+        padding: 1.5% 3%;
+      }
+      .heart {
+        float: left;
+      }
+      .comment {
+        float: right;
+      }
+      .comment-btn {
+        margin: auto;
+        width: 99.8%;
+      }
+      .comment-box {
+        height: 3em;
+        font-size: 1.2em;
+      }
+      .trash {
+        text-align: center;
+      }
+      .comment-view {
+        width: 20%;
+      }
+      .comments {
+        margin: 0 auto;
+        text-align: left;
+        font-weight: 500;
+        font-size: 1.2em;
+        width: 100%;
+      }
+      .comments-time {
+        margin: 0;
+        text-align: left;
+        font-weight: 475;
+        font-size: 1em;
+      }
+      .delete-comment {
+        float: right;
+        color: black;
+      }
+      .offcanvas-add {
+        margin: 0;
+        width: 100%;
+      }
+      .like-count {
+        float: left;
+        margin-bottom: 0;
+      }
+      @media (min-width: 0px) and (max-width: 640px) {
+        .post-card {
+          width: 95%;
+          margin: auto;
+        }
+        .post-div {
+          width: 95%;
+          margin: auto;
+        }
+      }
+      @media (min-width: 0px) and (max-width: 840px) {
+        .comment-view {
+          width: 100%;
+          height: 45%;
+          overflow: scroll;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <h1 class="title">
+      Welcome to {{profile_user.username | title}}'s profile.
+    </h1>
+    <br />
+
+    <div id="posts">
+      {% for post in posts %}
+      <br />
+      {%if posts.length == 0%}
+      <br />
+      <br />
+      <h1 class="title">Sorry! This user hasn't posted anything yet!</h1>
+      {%endif%}
+      <div class="card text-center post-card" id="post-{{post.id}}">
+        <div class="card-header">
+          <span>
+            <p class="name">{{post.user.username | title}}</p>
+
+            <p class="date">{{post.time}}</p>
+          </span>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title post-txt">{{post.text}}</h5>
+        </div>
+        <div class="card-footer">
+          <span>
+            {% if user.id not in post.likes | map(attribute='user_id') | list %}
+            <i
+              class="fa-regular fa-heart fa-2x heart"
+              onclick="like({{post.id}})"
+              id="like-btn-{{post.id}}"
+            ></i>
+            {%else%}
+            <i
+              class="fa-solid fa-heart fa-2x heart"
+              onclick="like({{post.id}})"
+              id="like-btn-{{post.id}}"
+            ></i>
+            {%endif%}
+            <h4 id="like-count-{{post.id}}" class="like-count">
+              &nbsp;: {{post.likes|length}}
+            </h4>
+            {% if user.id == post.user_id %}
+            <i
+              onclick="deletePost({{post.id}})"
+              id="delete-post-{{post.id}}"
+              class="fa-solid fa-trash-can fa-2x trash"
+            ></i>
+            {% endif %}
+            <i
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasScrolling-{{post.id}}"
+              aria-controls="offcanvasScrolling"
+              onclick="showComment({{post.id}})"
+              class="fa-regular fa-comment-dots fa-2x comment"
+            ></i
+          ></span>
+        </div>
+        <div
+          class="offcanvas offcanvas-end comment-view"
+          data-bs-scroll="true"
+          data-bs-backdrop="false"
+          tabindex="-1"
+          id="offcanvasScrolling-{{post.id}}"
+          aria-labelledby="offcanvasScrollingLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">
+              Comments
+            </h5>
+            <button
+              onclick="hideComment({{post.id}})"
+              type="button"
+              id="closeButton-{{post.id}}"
+              class="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          {%if post.comments|length == 0%}
+          <div class="offcanvas-body" id="offcanvasBody-{{post.id}}">
+            <p class="comments">Sorry no comments available for this post</p>
+          </div>
+          {%else%}
+
+          <div class="offcanvas-body" id="offcanvasBody-{{post.id}}">
+            {% for comment in post.comments %}
+
+            <p class="comments-time">{{comment.time}}</p>
+            <p class="comments">
+              {{comment.user.username | title}} said "{{comment.text}}" {%if
+              user.id == comment.user_id or user.id == post.user_id%}
+              <button
+                type="button"
+                aria-label="Close"
+                onclick="deleteComment({{comment.id}})"
+                id="deleteCom-{{comment.id}}"
+                class="btn-close delete-comment"
+              ></button>
+              {%endif%}
+            </p>
+
+            <br />
+            <hr style="width: 100%" />
+
+            {%endfor%}
+          </div>
+          {%endif%}
+        </div>
+
+        <div class="form-floating">
+          <form
+            autocomplete="off"
+            method="POST"
+            action="/add-comment/{{post.id}}"
+            onsubmit="return addComment({{post.id}})"
+            class="comment-form hide"
+            id="comment-form-{{post.id}}"
+          >
+            <input
+              name="comment"
+              type="text"
+              class="form-control comment-box"
+              id="comment-{{post.id}}"
+              placeholder="Comments"
+            />
+
+            <button type="submit" class="btn btn-outline-dark comment-btn">
+              Comment
+            </button>
+          </form>
+        </div>
+      </div>
+      <br />
+      {%endfor%}
+      <br />
+    </div>
+  </body>
+  {%endblock%}
+</html>
