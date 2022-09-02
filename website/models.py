@@ -9,8 +9,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:cartman0@localhost/social'
-app.config['SECRET_KEY'] = '2134c34ab476f273d962559f4d0f9d8777e27d00208f27a394935aa6f5f8b7bb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:*******@localhost/social'
+app.config['SECRET_KEY'] = '*******'
 
 
 db = SQLAlchemy(app)
